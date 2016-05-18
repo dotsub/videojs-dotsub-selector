@@ -1,3 +1,11 @@
+@mixin flex($args...) {
+  -webkit-box-flex: $args;
+  -moz-box-flex: $args;
+  -webkit-flex: $args;
+  -ms-flex: $args;
+  flex: $args;
+}
+
 // Sass for videojs-dotsub-selector
 
 .video-js {
@@ -5,5 +13,28 @@
   // This class is added to the video.js element by the plugin by default.
   &.vjs-dotsub-selector {
     display: block;
+  }
+
+  .vjs-dotsub-selector-button {
+    @include flex(none);
+    font-size: 1em;
+    line-height: 3em;
+    min-width: 2em;
+    width: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+
+    .vjs-menu .vjs-menu-content {
+      width: 18em;
+      z-index: 9999;
+
+      .vjs-menu-item {
+        text-transform: none;
+      }
+    }
+
+    .vjs-dotsub-selector-language {
+
+    }
   }
 }
