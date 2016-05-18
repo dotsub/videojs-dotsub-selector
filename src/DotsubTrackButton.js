@@ -20,10 +20,8 @@ class DotsubTrackButton extends MenuButton {
     });
   }
 
-  // TODO: Replace time-control with a class just for this control.
   buildCSSClass() {
-    return `vjs-dotsub-selector-button vjs-menu-button
-              vjs-time-control ${super.buildCSSClass()}`;
+    return `vjs-dotsub-selector-button vjs-menu-button ${super.buildCSSClass()}`;
   }
 
   createEl() {

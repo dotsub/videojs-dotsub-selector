@@ -2,7 +2,62 @@ import videojs, { xhr } from 'video.js';
 import './DotsubTrackButton.js';
 
 // Default options for the plugin.
-const defaults = {};
+const defaults = {
+  loadFirstTrack: true
+};
+
+/**
+ * Function that loads the tracks from Dotsub's API via xhr
+ *
+ * If options.loadFirstTrack is true the first track is seleted.
+ *
+ * @function loadMediaTracks
+ * @param    {String} mediaId
+ * @param    {Player} player
+ * @param    {Object} [options={}]
+ */
+const loadMediaTracks = (mediaId, player, options) => {
+  xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
+    if (!error) {
+      const dotsubTracks = JSON.parse(responseBody);
+      let dotsubTrackButton = player.controlBar.addChild('DotsubTrackButton', {
+        dotsubTracks
+      });
+      let volumeButton = document.getElementsByClassName('vjs-volume-menu-button')[0];
+
+      player.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeButton);
+
+      if (options.loadFirstTrack && dotsubTracks.length > 0) {
+        player.trigger('trackselected', dotsubTracks[0]);
+      }
+    }
+  });
+};
+
+/**
+ * Handles the selection of a track. The captions are loaded over xhr
+ * then a 'captions' event is thrown. See videojs-dotsub-captions for how
+ * captions are rendered.
+ *
+ * @function selectTrack
+ * @param    {Object} track
+ * @param    {Player} player
+ */
+const selectTrack = (track, player) => {
+  if (track) {
+    xhr(`/api/v3/tracks/${track.trackId}`, (error, response, responseBody) => {
+      if (error || response.statusCode !== 200) {
+        player.trigger('captions', []);
+      } else {
+        const captions = JSON.parse(responseBody);
+
+        player.trigger('captions', captions);
+      }
+    });
+  } else {
+    player.trigger('captions', []);
+  }
+};
 
 /**
  * Function to invoke when the player is ready.
@@ -17,6 +72,14 @@ const defaults = {};
  */
 const onPlayerReady = (player, options) => {
   player.addClass('vjs-dotsub-selector');
+
+  // load tracks is an event that triggers an xhr request to get the track listing
+  player.on('loadtracks', (event, mediaId) => loadMediaTracks(mediaId, player, options));
+  // track selected is triggered by DotsubTrackItem to denote the selection of a track.
+  player.on('trackselected', (event, track) => selectTrack(track, player));
+
+  // tell any listeners the selector plugin is ready
+  player.trigger('selectorready');
 };
 
 /**
@@ -34,40 +97,6 @@ const onPlayerReady = (player, options) => {
 const dotsubSelector = function(options) {
   this.ready(() => {
     onPlayerReady(this, videojs.mergeOptions(defaults, options));
-
-    this.on('loadtracks', (event, mediaId) => {
-      xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
-        if (!error) {
-          const dotsubTracks = JSON.parse(responseBody);
-
-          let dotsubTrackButton =
-                    this.controlBar.addChild('DotsubTrackButton', { dotsubTracks });
-          let volumeMenuButton =
-                    document.getElementsByClassName('vjs-volume-menu-button')[0];
-
-          this.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeMenuButton);
-        }
-      });
-    });
-
-    this.on('trackselected', (event, track) => {
-
-      if (track) {
-        xhr(`/api/v3/tracks/${track.trackId}`, (error, response, responseBody) => {
-          if (error || response.statusCode !== 200) {
-            this.trigger('captions', []);
-          } else {
-            const captions = JSON.parse(responseBody);
-
-            this.trigger('captions', captions);
-          }
-        });
-      } else {
-        this.trigger('captions', []);
-      }
-    });
-
-    this.trigger('selectorready');
   });
 };
 
