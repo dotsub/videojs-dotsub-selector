@@ -33,3 +33,6 @@ dist/
 docs/api/
 es5/
 test/dist/
+
+# npm pack files
+*.tgz
