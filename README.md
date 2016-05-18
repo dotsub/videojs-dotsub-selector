@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.org/dotsub/videojs-dotsub-selector.svg?branch=master)](https://travis-ci.org/dotsub/videojs-dotsub-selector)[![npm version](https://badge.fury.io/js/videojs-dotsub-selector.svg)](https://badge.fury.io/js/videojs-dotsub-selector)
+
 # videojs-dotsub-selector
 
-Adds a track selector to the menubar. 
+Adds a track selector to the menubar.
 
 ## Installation
 
