@@ -1,4 +1,4 @@
-import videojs, { xhr }  from 'video.js';
+import videojs, { xhr } from 'video.js';
 import './DotsubTrackButton.js';
 
 // Default options for the plugin.
@@ -36,28 +36,30 @@ const dotsubSelector = function(options) {
     onPlayerReady(this, videojs.mergeOptions(defaults, options));
 
     this.on('loadtracks', (event, mediaId) => {
-      // TODO: Move this out? Should the plugin do xhr requests?
       xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
-        const dotsubTracks = JSON.parse(responseBody);
+        if (!error) {
+          const dotsubTracks = JSON.parse(responseBody);
 
-        // insert button
-        let dotsubTrackButton = this.controlBar.addChild('DotsubTrackButton', { dotsubTracks });
-        let volumeMenuButton = document.getElementsByClassName('vjs-volume-menu-button')[0];
+          let dotsubTrackButton =
+                    this.controlBar.addChild('DotsubTrackButton', { dotsubTracks });
+          let volumeMenuButton =
+                    document.getElementsByClassName('vjs-volume-menu-button')[0];
 
-        this.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeMenuButton);
-
-      })
+          this.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeMenuButton);
+        }
+      });
     });
 
     this.on('trackselected', (event, track) => {
 
       if (track) {
         xhr(`/api/v3/tracks/${track.trackId}`, (error, response, responseBody) => {
-          if (response.statusCode === 200) {
-            const captions = JSON.parse(responseBody);
-            this.trigger('captions', captions);
-          } else {
+          if (error || response.statusCode !== 200) {
             this.trigger('captions', []);
+          } else {
+            const captions = JSON.parse(responseBody);
+
+            this.trigger('captions', captions);
           }
         });
       } else {

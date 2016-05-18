@@ -9,7 +9,8 @@ class DotsubTrackButton extends MenuButton {
     super(player, options);
 
     player.on('trackselected', (event, track) => {
-      const div = this.player_.el().getElementsByClassName('vjs-dotsub-selector-language')[0];
+      const div = this.player_.el()
+              .getElementsByClassName('vjs-dotsub-selector-language')[0];
 
       if (track) {
         div.innerHTML = `${track.language.name} - ${track.name}`;
@@ -21,7 +22,8 @@ class DotsubTrackButton extends MenuButton {
 
   // TODO: Replace time-control with a class just for this control.
   buildCSSClass() {
-    return `vjs-dotsub-selector-button vjs-menu-button vjs-time-control ${super.buildCSSClass()}`;
+    return `vjs-dotsub-selector-button vjs-menu-button
+              vjs-time-control ${super.buildCSSClass()}`;
   }
 
   createEl() {
@@ -37,7 +39,7 @@ class DotsubTrackButton extends MenuButton {
     return el;
   }
 
-  createItems(items=[]) {
+  createItems(items = []) {
 
     items.push(new DotsubTrackItem(this.player_, {label: 'Captions Off'}));
 
@@ -49,11 +51,6 @@ class DotsubTrackButton extends MenuButton {
     }
 
     return items;
-  }
-
-  updatedSelected(track) {
-    const div = this.el_.getElementsByClassName('vjs-dotsub-selector-button')[0];
-    div.innerHTML = `${track.language.name} - ${track.name}`;
   }
 
 }
