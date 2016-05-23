@@ -4,6 +4,7 @@ import QUnit from 'qunit';
 import sinon from 'sinon';
 import videojs from 'video.js';
 import plugin from '../src/plugin';
+import DotsubTrackButton from '../src/DotsubTrackButton.js';
 
 const Player = videojs.getComponent('Player');
 
@@ -72,4 +73,28 @@ QUnit.test('plugin throws selectorready event', function(assert) {
   );
 
   stub.restore();
+});
+
+QUnit.test('TrackButton creates items', function(assert) {
+  assert.expect(2);
+
+  const trackButton = new DotsubTrackButton(this.player, {
+    dotsubTracks: []
+  });
+
+  assert.equal(1,
+    trackButton.items.length,
+    'track button not created, should have one item'
+  );
+
+  const trackButtonWithItems = new DotsubTrackButton(this.player, {
+    dotsubTracks: [{ name: 'test', language: {
+      name: 'Foo'
+    }}]
+  });
+
+  assert.equal(2,
+    trackButtonWithItems.items.length,
+    'track button not created, should have two items'
+  );
 });
