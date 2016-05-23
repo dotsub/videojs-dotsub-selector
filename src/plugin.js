@@ -33,16 +33,16 @@ const loadMediaTracks = (mediaId, player, options) => {
  * @param    {Player} player
  * @param    {Object} [options={}]
  */
-const renderTracks = (tracks, player, options) => {
+const renderTracks = (dotsubTracks, player, options) => {
   let dotsubTrackButton = player.controlBar.addChild('DotsubTrackButton', {
-    tracks
+    dotsubTracks
   });
   let volumeButton = document.getElementsByClassName('vjs-volume-menu-button')[0];
 
   player.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeButton);
 
-  if (options.loadFirstTrack && tracks.length > 0) {
-    player.trigger('trackselected', tracks[0]);
+  if (options.loadFirstTrack && dotsubTracks.length > 0) {
+    player.trigger('trackselected', dotsubTracks[0]);
   }
 };
 
