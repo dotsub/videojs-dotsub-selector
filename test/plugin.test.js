@@ -3,7 +3,6 @@ import document from 'global/document';
 import QUnit from 'qunit';
 import sinon from 'sinon';
 import videojs from 'video.js';
-
 import plugin from '../src/plugin';
 
 const Player = videojs.getComponent('Player');
@@ -55,4 +54,22 @@ QUnit.test('registers itself with video.js', function(assert) {
     this.player.hasClass('vjs-dotsub-selector'),
     'the plugin adds a class to the player'
   );
+});
+
+QUnit.test('plugin throws selectorready event', function(assert) {
+  assert.expect(1);
+
+  const stub = sinon.stub(this.player, 'trigger');
+
+  this.player.dotsubSelector();
+
+  // Tick the clock forward enough to trigger the player to be "captionsready".
+  this.clock.tick(5);
+
+  assert.ok(
+    stub.calledWith('selectorready'),
+    'the plugin throws a ready event'
+  );
+
+  stub.restore();
 });
