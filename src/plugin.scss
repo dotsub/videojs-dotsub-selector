@@ -13,6 +13,10 @@
   // This class is added to the video.js element by the plugin by default.
   &.vjs-dotsub-selector {
     display: block;
+
+    .vjs-control-bar {
+      display: flex;
+    }
   }
 
   .vjs-dotsub-selector-button {
@@ -31,10 +35,6 @@
       .vjs-menu-item {
         text-transform: none;
       }
-    }
-
-    .vjs-dotsub-selector-language {
-
     }
   }
 }

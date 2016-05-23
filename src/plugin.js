@@ -41,7 +41,7 @@ const renderTracks = (tracks, player, options) => {
 
   player.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeButton);
 
-  if (options.loadFirstTrack && dotsubTracks.length > 0) {
+  if (options.loadFirstTrack && tracks.length > 0) {
     player.trigger('trackselected', tracks[0]);
   }
 };
