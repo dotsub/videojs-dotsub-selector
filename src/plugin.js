@@ -7,23 +7,6 @@ const defaults = {
 };
 
 /**
- * Function that loads the tracks from Dotsub's API via xhr
- *
- * @function loadMediaTracks
- * @param    {String} mediaId
- * @param    {Player} player
- * @param    {Object} [options={}]
- */
-const loadMediaTracks = (mediaId, player, options) => {
-  xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
-    if (!error) {
-      const dotsubTracks = JSON.parse(responseBody);
-      renderTracks(dotsubTracks, player, options);
-    }
-  });
-};
-
-/**
  * Function that renders tracks onto the controlBar
  *
  * If options.loadFirstTrack is true the first track is seleted.
@@ -44,6 +27,24 @@ const renderTracks = (dotsubTracks, player, options) => {
   if (options.loadFirstTrack && dotsubTracks.length > 0) {
     player.trigger('trackselected', dotsubTracks[0]);
   }
+};
+
+/**
+ * Function that loads the tracks from Dotsub's API via xhr
+ *
+ * @function loadMediaTracks
+ * @param    {String} mediaId
+ * @param    {Player} player
+ * @param    {Object} [options={}]
+ */
+const loadMediaTracks = (mediaId, player, options) => {
+  xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
+    if (!error) {
+      const dotsubTracks = JSON.parse(responseBody);
+
+      renderTracks(dotsubTracks, player, options);
+    }
+  });
 };
 
 /**
