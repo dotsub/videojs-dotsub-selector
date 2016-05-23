@@ -9,8 +9,6 @@ const defaults = {
 /**
  * Function that loads the tracks from Dotsub's API via xhr
  *
- * If options.loadFirstTrack is true the first track is seleted.
- *
  * @function loadMediaTracks
  * @param    {String} mediaId
  * @param    {Player} player
@@ -20,18 +18,32 @@ const loadMediaTracks = (mediaId, player, options) => {
   xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
     if (!error) {
       const dotsubTracks = JSON.parse(responseBody);
-      let dotsubTrackButton = player.controlBar.addChild('DotsubTrackButton', {
-        dotsubTracks
-      });
-      let volumeButton = document.getElementsByClassName('vjs-volume-menu-button')[0];
-
-      player.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeButton);
-
-      if (options.loadFirstTrack && dotsubTracks.length > 0) {
-        player.trigger('trackselected', dotsubTracks[0]);
-      }
+      renderTracks(dotsubTracks, player, options);
     }
   });
+};
+
+/**
+ * Function that renders tracks onto the controlBar
+ *
+ * If options.loadFirstTrack is true the first track is seleted.
+ *
+ * @function renderTracks
+ * @param    {Array} tracks
+ * @param    {Player} player
+ * @param    {Object} [options={}]
+ */
+const renderTracks = (tracks, player, options) => {
+  let dotsubTrackButton = player.controlBar.addChild('DotsubTrackButton', {
+    tracks
+  });
+  let volumeButton = document.getElementsByClassName('vjs-volume-menu-button')[0];
+
+  player.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeButton);
+
+  if (options.loadFirstTrack && dotsubTracks.length > 0) {
+    player.trigger('trackselected', tracks[0]);
+  }
 };
 
 /**
