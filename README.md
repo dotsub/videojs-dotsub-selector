@@ -2,7 +2,15 @@
 
 # videojs-dotsub-selector
 
-Adds a track selector to the menubar.
+Adds a track selector to the menubar. This is used in conjunction with [videojs-dotsub-captions](https://github.com/dotsub/videojs-dotsub-captions). This provides a selection menu within the player for which captions to display. The plugin uses Dotsub's API to fetch and list the langauges for a video.
+
+### Events
+
+*selectorready*: This event denotes the plugin is loaded and ready to fetch captions.
+
+*loadtracks*: This event tells the plugin to load captions from Dotsub. This expects a video ID as the event data. (ex: `player.trigger('loadtracks', 'trackId');`)
+
+*trackselected*: This event is triggered when the user has selected a track from the list in the control bar. The event data payload contains a track object. If no track object is present 'Captions Off' was selected. 
 
 ## Installation
 
