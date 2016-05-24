@@ -1,5 +1,7 @@
 import videojs, { xhr } from 'video.js';
 import './DotsubTrackButton.js';
+import { TRACKS_SELECTED_EVENT, READY_EVENT,
+  CAPTIONS_EVENT, LOAD_EVENT } from './constants.js';
 
 // Default options for the plugin.
 const defaults = {
@@ -25,7 +27,7 @@ const renderTracks = (dotsubTracks, player, options) => {
   player.controlBar.el().insertBefore(dotsubTrackButton.el(), volumeButton);
 
   if (options.loadFirstTrack && dotsubTracks.length > 0) {
-    player.trigger('trackselected', dotsubTracks[0]);
+    player.trigger(TRACKS_SELECTED_EVENT, dotsubTracks[0]);
   }
 };
 
@@ -60,15 +62,15 @@ const selectTrack = (track, player) => {
   if (track) {
     xhr(`/api/v3/tracks/${track.trackId}`, (error, response, responseBody) => {
       if (error || response.statusCode !== 200) {
-        player.trigger('captions', []);
+        player.trigger(CAPTIONS_EVENT, []);
       } else {
         const captions = JSON.parse(responseBody);
 
-        player.trigger('captions', captions);
+        player.trigger(CAPTIONS_EVENT, captions);
       }
     });
   } else {
-    player.trigger('captions', []);
+    player.trigger(CAPTIONS_EVENT, []);
   }
 };
 
@@ -87,12 +89,12 @@ const onPlayerReady = (player, options) => {
   player.addClass('vjs-dotsub-selector');
 
   // load tracks is an event that triggers an xhr request to get the track listing
-  player.on('loadtracks', (event, mediaId) => loadMediaTracks(mediaId, player, options));
+  player.on(LOAD_EVENT, (event, mediaId) => loadMediaTracks(mediaId, player, options));
   // track selected is triggered by DotsubTrackItem to denote the selection of a track.
-  player.on('trackselected', (event, track) => selectTrack(track, player));
+  player.on(TRACKS_SELECTED_EVENT, (event, track) => selectTrack(track, player));
 
   // tell any listeners the selector plugin is ready
-  player.trigger('selectorready');
+  player.trigger(READY_EVENT);
 };
 
 /**

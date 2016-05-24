@@ -2,6 +2,8 @@ import videojs from 'video.js';
 import DotsubTrackItem from './DotsubTrackItem.js';
 
 const MenuButton = videojs.getComponent('MenuButton');
+const CAPTIONS_OFF = 'Captions Off';
+const PLUGIN_CLASSNAME = 'vjs-dotsub-selector-language';
 
 class DotsubTrackButton extends MenuButton {
 
@@ -10,12 +12,12 @@ class DotsubTrackButton extends MenuButton {
 
     player.on('trackselected', (event, track) => {
       const div = this.player_.el()
-              .getElementsByClassName('vjs-dotsub-selector-language')[0];
+              .getElementsByClassName(PLUGIN_CLASSNAME)[0];
 
       if (track) {
         div.innerHTML = `${track.language.name} - ${track.name}`;
       } else {
-        div.innerHTML = 'Captions Off';
+        div.innerHTML = CAPTIONS_OFF;
       }
     });
   }
@@ -30,8 +32,8 @@ class DotsubTrackButton extends MenuButton {
     });
     const span = document.createElement('span');
 
-    span.classList.add('vjs-dotsub-selector-language');
-    span.innerHTML = 'Captions Off';
+    span.classList.add(PLUGIN_CLASSNAME);
+    span.innerHTML = CAPTIONS_OFF;
     el.appendChild(span);
 
     return el;
@@ -39,7 +41,7 @@ class DotsubTrackButton extends MenuButton {
 
   createItems(items = []) {
 
-    items.push(new DotsubTrackItem(this.player_, {label: 'Captions Off'}));
+    items.push(new DotsubTrackItem(this.player_, {label: CAPTIONS_OFF}));
 
     for (const track of this.options_.dotsubTracks) {
       items.push(new DotsubTrackItem(this.player_, {
