@@ -1,7 +1,7 @@
 import videojs, { xhr } from 'video.js';
 import './DotsubTrackButton.js';
 import { TRACKS_SELECTED_EVENT, READY_EVENT,
-  CAPTIONS_EVENT, LOAD_EVENT } from './constants.js';
+  CAPTIONS_EVENT, LANGUAGE_EVENT, LOAD_EVENT } from './constants.js';
 
 // Default options for the plugin.
 const defaults = {
@@ -66,6 +66,9 @@ const selectTrack = (track, player) => {
       } else {
         const captions = JSON.parse(responseBody);
 
+        if (track.language) {
+          player.trigger(LANGUAGE_EVENT, track.language);
+        }
         player.trigger(CAPTIONS_EVENT, captions);
       }
     });
