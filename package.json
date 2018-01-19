@@ -37,7 +37,7 @@
     "dotsub",
     "captions"
   ],
-  "author": "Brooks Lyrette <brooks@dotsub.com>",
+  "author": "Dotsub <dev@dotsub.com>",
   "license": "Apache-2.0",
   "browserify-shim": {
     "qunit": "global:QUnit",
