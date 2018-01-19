@@ -69,6 +69,7 @@
     "test/"
   ],
   "dependencies": {
+    "axios": "^0.17.1",
     "video.js": "^5.9.2"
   },
   "devDependencies": {

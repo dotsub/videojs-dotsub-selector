@@ -1,4 +1,5 @@
-import videojs, { xhr } from 'video.js';
+import videojs from 'video.js';
+import axios from 'axios';
 import './DotsubTrackButton.js';
 import { TRACKS_SELECTED_EVENT, READY_EVENT,
   CAPTIONS_EVENT, LANGUAGE_EVENT, LOAD_EVENT } from './constants.js';
@@ -14,7 +15,7 @@ const defaults = {
  * If options.loadFirstTrack is true the first track is seleted.
  *
  * @function renderTracks
- * @param    {Array} tracks
+ * @param    {Array} dotsubTracks
  * @param    {Player} player
  * @param    {Object} [options={}]
  */
@@ -39,15 +40,9 @@ const renderTracks = (dotsubTracks, player, options) => {
  * @param    {Player} player
  * @param    {Object} [options={}]
  */
-const loadMediaTracks = (mediaId, player, options) => {
-  xhr(`/api/v3/media/${mediaId}/tracks`, (error, response, responseBody) => {
-    if (!error) {
-      const dotsubTracks = JSON.parse(responseBody);
-
-      renderTracks(dotsubTracks, player, options);
-    }
-  });
-};
+const loadMediaTracks = (mediaId, player, options) =>
+  axios.get(`/api/v3/media/${mediaId}/tracks`)
+    .then(response => renderTracks(response.data, player, options));
 
 /**
  * Handles the selection of a track. The captions are loaded over xhr
@@ -60,18 +55,13 @@ const loadMediaTracks = (mediaId, player, options) => {
  */
 const selectTrack = (track, player) => {
   if (track) {
-    xhr(`/api/v3/tracks/${track.trackId}`, (error, response, responseBody) => {
-      if (error || response.statusCode !== 200) {
-        player.trigger(CAPTIONS_EVENT, []);
-      } else {
-        const captions = JSON.parse(responseBody);
-
+    axios.get(`/api/v3/tracks/${track.trackId}`)
+      .then(response => {
         if (track.language) {
           player.trigger(LANGUAGE_EVENT, track.language);
         }
-        player.trigger(CAPTIONS_EVENT, captions);
-      }
-    });
+        player.trigger(CAPTIONS_EVENT, response.data);
+      });
   } else {
     player.trigger(CAPTIONS_EVENT, []);
   }
