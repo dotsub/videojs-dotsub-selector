@@ -4,6 +4,7 @@
   "description": "Adds a track selector to the menubar. ",
   "repository": "https://github.com/dotsub/videojs-dotsub-selector",
   "main": "es5/plugin.js",
+  "engines" : { "node" : ">=4" },
   "scripts": {
     "prebuild": "npm run clean",
     "build": "npm-run-all -p build:*",
