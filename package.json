@@ -1,6 +1,6 @@
 {
   "name": "videojs-dotsub-selector",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Adds a track selector to the menubar. ",
   "repository": "https://github.com/dotsub/videojs-dotsub-selector",
   "main": "es5/plugin.js",
@@ -70,7 +70,7 @@
     "test/"
   ],
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.18.1",
     "video.js": "^5.9.2"
   },
   "devDependencies": {
